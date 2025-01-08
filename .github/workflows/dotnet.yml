@@ -1,0 +1,25 @@
+name: .NET
+
+on:  # Определя събитията, които задействат този workflow
+  push:	#  Workflow се стартира, когато има нов commit в посочен клон.
+    branches: [ "main" ]
+  pull_request:	# Workflow се стартира, когато се създаде или актуализира pull request
+    branches: [ "main" ]
+jobs: # Определя задачите, които ще се изпълняват.
+  build: #Задава операционната система, върху която ще се изпълнява задачата
+    runs-on: ubuntu-latest
+    steps: # Поредица от инструкции, които се изпълняват в рамките на задачата
+# Описание на стъпката
+    - name: Checkaout the code  
+      uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies 
+      run: dotnet restore # Тази команда изтегля всички зависимости за build-a на проекта
+    - name: Build  
+      run: dotnet build --no-restore # Компилиране на кода без повторно инст. на зависимости
+    - name: Test 
+      run: dotnet test --no-build --verbosity normal # Пускане на тестове
+
